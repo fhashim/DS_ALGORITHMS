@@ -1,31 +1,58 @@
-def get_location(list, number, mid):
-    print('List:', list, 'Number:', number, 'Mid:', mid)
-    if number == list[mid]:
-        if mid-1 >= 0 and number == list[mid-1]:
+def get_direction(lst, midpoint, num):
+    # print(lst, midpoint, num)
+    # print(lst[midpoint], num)
+    if lst[midpoint] == num:
+        if len(lst) > 0 and lst[midpoint - 1] == num:
             return 'left'
         else:
             return 'found'
-    elif number > list[mid]:
+    elif lst[midpoint] == num:
+        return 'found'
+    elif lst[midpoint] > num:
         return 'left'
-    else:
+    elif lst[midpoint] < num:
         return 'right'
+    else:
+        return None
 
-def find_number(list, number):
-    low, high = 0, len(list) - 1
+def do_binary_search(lst, num):
+    # get range of list
+    low, high = 0, len(lst) - 1
 
+    if low == high:
+        return 0
+
+    # condition to run how long
     while low <= high:
-        print('low:', low, 'high:', high)
-        mid = (low + high) // 2
-        result = get_location(list, number, mid)
-        print('Result', result)
+        # get mid value
+        midpoint = (low + high) // 2
+        direction = get_direction(lst, midpoint, num)
 
-        if result == 'found':
-            return mid
-        elif result == 'right':
-            low = mid + 1
-        elif result == 'left':
-            high = mid - 1 
+        # you've got the desired position at which number lies
+        if direction == 'found':
+            return midpoint
+        
+        # number lies to the left of the list from mid. number is less than the midpoint value
+        elif direction == 'left':
+            high = midpoint - 1
+
+        # number lies to the right of the list from mid. number is greater than the midpoint value
+        elif direction == 'right':
+            low = midpoint + 1
+
+        # failed case
+        elif direction == None:
+            return -1
 
     return -1
 
-find_number([10, 5, 5, 3, 1], 5)
+def do_binary_search_reversed(lst, num):
+    
+    len_list = len(lst) - 1
+    lst = lst[::-1]
+    position = do_binary_search(lst, num)
+    position = len_list - position
+
+    return position
+
+
