@@ -20,7 +20,7 @@ def do_binary_search(lst, num):
     low, high = 0, len(lst) - 1
 
     if low == high:
-        return 0
+        return -1
 
     # condition to run how long
     while low <= high:
@@ -56,3 +56,55 @@ def do_binary_search_reversed(lst, num):
     return position
 
 
+def get_direction_rotate_sorted_list(lst, midpoint):
+    
+    if lst[midpoint] < lst[midpoint-1] and \
+        lst[midpoint] < lst[midpoint+1]:
+        return 'found'
+    elif lst[midpoint] > lst[midpoint-1] and \
+        lst[midpoint] < lst[midpoint+1]:
+        return 'left'
+    elif lst[midpoint] > lst[midpoint-1] and \
+        lst[midpoint] > lst[midpoint+1]:
+        return 'right'
+    return None
+
+def rotate_sorted_list(lst):
+    low, high = 0, len(lst)
+
+    while low <= high:
+        midpoint = (high + low) // 2
+        direction = get_direction_rotate_sorted_list(lst, midpoint)
+
+        if direction == 'found':
+            if midpoint < 0:
+                return len(lst) + midpoint
+            else:
+                return midpoint
+        elif direction == 'right':
+            low = midpoint + 1
+        elif direction == 'left':
+            high = midpoint - 1
+        elif direction == None:
+            return -1
+        
+    return -1
+
+def get_target_position(lst, target):
+
+    min_pos = rotate_sorted_list(lst)
+    if lst[min_pos] == target:
+        return min_pos
+
+    elif lst[-1] < target:
+        sub_pos_target = do_binary_search(lst[ :min_pos ], target)
+        return sub_pos_target
+    
+    elif lst[-1] > target:
+        sub_pos_target = do_binary_search(lst[min_pos + 1: ], target)
+        return min_pos + sub_pos_target + 1
+    
+    else:
+        return -1
+        
+    
